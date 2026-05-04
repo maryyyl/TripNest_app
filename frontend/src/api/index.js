@@ -35,3 +35,22 @@ export const accommodationApi = {
     getByLokacija: (lokacija) => api.get(`/api/accommodations/lokacija/${lokacija}`),
     getByCena: (min, max) => api.get('/api/accommodations/cena', { params: { min, max } }),
 }
+// ── Reservations ──────────────────────────────────────────────────────────────
+export const reservationApi = {
+    create: (data) => api.post('/api/reservations', data),
+    myReservations: () => api.get('/api/reservations/my'),
+    getAll: () => api.get('/api/reservations'),
+    getByStatus: (status) => api.get(`/api/reservations/status/${status}`),
+    updateStatus: (id, status) => api.put(`/api/reservations/${id}/status`, null, { params: { status } }),
+    delete: (id) => api.delete(`/api/reservations/${id}`),
+}
+
+// ── Accommodation Requests ────────────────────────────────────────────────────
+export const accommodationRequestApi = {
+    create: (data) => api.post('/api/accommodation-requests', data),
+    myRequests: () => api.get('/api/accommodation-requests/my'),
+    getAll: () => api.get('/api/accommodation-requests'),
+    getByStatus: (status) => api.get(`/api/accommodation-requests/status/${status}`),
+    approve: (id) => api.post(`/api/accommodation-requests/${id}/approve`),
+    reject: (id) => api.post(`/api/accommodation-requests/${id}/reject`),
+}

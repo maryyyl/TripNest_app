@@ -1,19 +1,30 @@
+import C from '../colors'
+
 export default function TagFilter({ tags, selected, onToggle }) {
   return (
-    <div className="flex flex-wrap gap-2">
-      {tags.map((tag) => (
-        <button
-          key={tag}
-          onClick={() => onToggle(tag)}
-          className={`px-3 py-1.5 text-sm rounded-full font-medium transition-all duration-200
-            ${selected.includes(tag)
-              ? 'bg-emerald-600 text-white shadow-sm'
-              : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
-            }`}
-        >
-          {tag.replace(/_/g, ' ')}
-        </button>
-      ))}
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+      {tags.map((tag) => {
+        const active = selected.includes(tag)
+        return (
+          <button
+            key={tag}
+            onClick={() => onToggle(tag)}
+            style={{
+              padding: '0.375rem 0.875rem',
+              fontSize: '0.875rem',
+              borderRadius: '9999px',
+              fontWeight: '500',
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'all 0.15s',
+              backgroundColor: active ? C.greenDark : C.beigeDark,
+              color: active ? C.white : C.text,
+            }}
+          >
+            {tag.replace(/_/g, ' ')}
+          </button>
+        )
+      })}
     </div>
   )
 }

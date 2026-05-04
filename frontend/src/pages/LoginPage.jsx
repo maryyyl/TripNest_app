@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { authApi } from '../api'
 import useAuthStore from '../store/authStore'
+import C from '../colors'
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -9,8 +10,6 @@ export default function LoginPage() {
   const [form, setForm] = useState({ username: '', password: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -20,66 +19,63 @@ export default function LoginPage() {
       const res = await authApi.login(form)
       login(res.data.token, res.data.user)
       navigate('/')
-    } catch (err) {
-      setError(err.response?.data?.message || 'Погрешно корисничко име или лозинка')
+    } catch {
+      setError('Погрешно корисничко име или лозинка')
     } finally {
       setLoading(false)
     }
   }
 
+  const inputStyle = {
+    width: '100%', padding: '0.75rem 1rem',
+    borderRadius: '0.75rem',
+    border: `1px solid ${C.beigeDark}`,
+    fontSize: '1rem', color: C.text,
+    backgroundColor: C.beige,
+    outline: 'none', boxSizing: 'border-box',
+  }
+
+  const labelStyle = { display: 'block', fontSize: '0.875rem', fontWeight: '500', color: C.text, marginBottom: '0.375rem' }
+
   return (
-    <div className="min-h-screen bg-stone-50 pt-20 flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
-        <div className="text-center mb-8">
-          <span className="text-4xl">🧭</span>
-          <h1 className="text-2xl font-bold text-stone-800 mt-2">Добредојде назад</h1>
-          <p className="text-stone-500 text-sm mt-1">Најави се во TripNest.mk</p>
+    <div style={{ minHeight: '100vh', backgroundColor: C.beige, paddingTop: '64px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 1rem 2rem' }}>
+      <div style={{ width: '100%', maxWidth: '28rem', backgroundColor: C.white, borderRadius: '1.25rem', boxShadow: '0 4px 24px rgba(0,0,0,0.08)', padding: '2.5rem' }}>
+
+        <div style={{textAlign: 'center', marginBottom: '2rem'}}>
+          <div style={{fontSize: '4rem', marginBottom: '0.75rem'}}>🧭</div>
+
+          <h1 style={{fontSize: '1.5rem', fontWeight: 'bold', color: C.greenDark}}>
+            Добредојде назад
+          </h1>
+
+          <p style={{color: C.textMuted, fontSize: '0.875rem', marginTop: '0.25rem'}}>
+            Најави се во TripNest.mk
+          </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
           <div>
-            <label className="text-sm font-medium text-stone-700 block mb-1">Корисничко име</label>
-            <input
-              name="username"
-              value={form.username}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 rounded-xl border border-stone-200 outline-none focus:ring-2 focus:ring-emerald-400 text-stone-800"
-              placeholder="username"
-            />
+            <label style={labelStyle}>Корисничко име</label>
+            <input name="username" value={form.username} onChange={e => setForm({...form, username: e.target.value})}
+                   required style={inputStyle} placeholder="username"/>
           </div>
-
           <div>
-            <label className="text-sm font-medium text-stone-700 block mb-1">Лозинка</label>
-            <input
-              name="password"
-              type="password"
-              value={form.password}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 rounded-xl border border-stone-200 outline-none focus:ring-2 focus:ring-emerald-400 text-stone-800"
-              placeholder="••••••••"
-            />
+            <label style={labelStyle}>Лозинка</label>
+            <input name="password" type="password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} required style={inputStyle} placeholder="••••••••" />
           </div>
 
           {error && (
-            <p className="text-red-500 text-sm bg-red-50 px-4 py-2 rounded-lg">{error}</p>
+            <p style={{ color: '#c0392b', fontSize: '0.875rem', backgroundColor: '#fdecea', padding: '0.5rem 0.875rem', borderRadius: '0.5rem' }}>{error}</p>
           )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 bg-emerald-600 text-white rounded-xl font-semibold hover:bg-emerald-700 transition-colors disabled:opacity-60"
-          >
+          <button type="submit" disabled={loading} style={{ padding: '0.875rem', backgroundColor: C.greenDark, color: C.white, border: 'none', borderRadius: '0.75rem', fontWeight: '600', fontSize: '1rem', cursor: 'pointer', opacity: loading ? 0.7 : 1 }}>
             {loading ? 'Се најавува...' : 'Најави се'}
           </button>
         </form>
 
-        <p className="text-center text-sm text-stone-500 mt-6">
+        <p style={{ textAlign: 'center', fontSize: '0.875rem', color: C.textMuted, marginTop: '1.5rem' }}>
           Немаш профил?{' '}
-          <Link to="/register" className="text-emerald-600 font-medium hover:underline">
-            Регистрирај се
-          </Link>
+          <Link to="/register" style={{ color: C.peach, fontWeight: '600', textDecoration: 'none' }}>Регистрирај се</Link>
         </p>
       </div>
     </div>

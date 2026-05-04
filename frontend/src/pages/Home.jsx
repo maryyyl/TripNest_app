@@ -1,4 +1,20 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import useAuthStore from '../store/authStore'
+import AddAccommodationModal from '../components/AddAccommodationModal'
+import ProposeAccommodationModal from '../components/ProposeAccommodationModal'
+
+const C = {
+  greenDark: '#4a7c59',
+  greenMid: '#7fa882',
+  peach: '#e8866a',
+  peachLight: '#f2b49e',
+  beige: '#f5ede4',
+  beigedark: '#e8d5c4',
+  brown: '#8b6245',
+  text: '#3a3a2a',
+  white: '#ffffff',
+}
 
 const categories = [
   {
@@ -6,92 +22,193 @@ const categories = [
     emoji: '🍽️',
     title: 'Гастрономија',
     desc: 'Ресторани, кафулиња и традиционална македонска кујна',
-    color: 'from-emerald-500 to-emerald-700',
-    hover: 'hover:shadow-emerald-200',
+    bg: C.greenDark,
   },
   {
     to: '/attractions',
     emoji: '🏔️',
     title: 'Атракции',
     desc: 'Природни убавини, споменици и авантуристички дестинации',
-    color: 'from-sky-500 to-sky-700',
-    hover: 'hover:shadow-sky-200',
+    bg: C.greenMid,
   },
   {
     to: '/accommodations',
     emoji: '🏡',
     title: 'Сместување',
     desc: 'Хотели, вили и автентични места за одмор',
-    color: 'from-amber-500 to-amber-700',
-    hover: 'hover:shadow-amber-200',
+    bg: C.peach,
   },
 ]
 
 export default function Home() {
-  return (
-    <div className="min-h-screen bg-stone-50 pt-16">
-      {/* Hero */}
-      <div className="relative bg-gradient-to-br from-emerald-800 via-emerald-700 to-teal-600 text-white py-28 px-6 overflow-hidden">
-        {/* Background decoration */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-72 h-72 bg-white rounded-full blur-3xl" />
-          <div className="absolute bottom-10 right-10 w-96 h-96 bg-amber-300 rounded-full blur-3xl" />
-        </div>
+  const { user } = useAuthStore()
+  const [showModal, setShowModal] = useState(false)
+  const [showPropose, setShowPropose] = useState(false)
 
-        <div className="relative max-w-4xl mx-auto text-center">
-          <div className="text-6xl mb-6">🧭</div>
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 leading-tight">
-            Откриј ја<br />
-            <span className="text-amber-300">Македонија</span>
-          </h1>
-          <p className="text-emerald-100 text-xl max-w-2xl mx-auto mb-10">
-            Гастрономија, атракции и сместување — сè на едно место за незаборавно патување.
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Link
-              to="/gastronomy"
-              className="px-8 py-3 bg-white text-emerald-800 font-semibold rounded-full hover:bg-amber-300 transition-colors shadow-lg"
-            >
-              Истражи сега
-            </Link>
-            <Link
-              to="/register"
-              className="px-8 py-3 bg-white/20 text-white font-semibold rounded-full hover:bg-white/30 transition-colors border border-white/30"
-            >
-              Регистрирај се
-            </Link>
+  return (
+      <div style={{ minHeight: '100vh', backgroundColor: C.beige, paddingTop: '64px' }}>
+        {showModal && <AddAccommodationModal onClose={() => setShowModal(false)} />}
+        {showPropose && <ProposeAccommodationModal onClose={() => setShowPropose(false)} />}
+
+        {/* Hero */}
+        <div style={{
+          backgroundColor: C.greenDark,
+          color: C.white,
+          padding: '7rem 1.5rem',
+          position: 'relative',
+          overflow: 'hidden',
+          textAlign: 'center',
+        }}>
+          <div style={{ maxWidth: '48rem', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+            <div style={{ fontSize: '5rem', marginBottom: '1.5rem' }}>🧭</div>
+            <h1 style={{ fontSize: '3.5rem', fontWeight: 'bold', lineHeight: 1.2, marginBottom: '1rem' }}>
+              Откриј ја <br />
+              <span style={{ color: C.peachLight }}>Македонија</span>
+            </h1>
+            <p style={{ fontSize: '1.2rem', opacity: 0.9, marginBottom: '2.5rem' }}>
+              Гастрономија, атракции и сместување — сè на едно место за незаборавно патување.
+            </p>
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Link to="/gastronomy" style={{
+                padding: '0.75rem 2rem',
+                backgroundColor: C.beige,
+                color: C.greenDark,
+                fontWeight: '600',
+                borderRadius: '9999px',
+                textDecoration: 'none',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+              }}>
+                Истражи сега
+              </Link>
+              <Link to="/register" style={{
+                padding: '0.75rem 2rem',
+                backgroundColor: 'transparent',
+                color: C.white,
+                fontWeight: '600',
+                borderRadius: '9999px',
+                textDecoration: 'none',
+                border: '2px solid rgba(255,255,255,0.5)',
+              }}>
+                Регистрирај се
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Categories */}
-      <div className="max-w-6xl mx-auto px-6 py-20">
-        <h2 className="text-3xl font-bold text-stone-800 text-center mb-3">Истражи по категорија</h2>
-        <p className="text-stone-500 text-center mb-12">Избери го своето следно искуство</p>
+        {/* Categories */}
+        <div style={{ maxWidth: '72rem', margin: '0 auto', padding: '5rem 1.5rem' }}>
+          <h2 style={{ fontSize: '2rem', fontWeight: 'bold', textAlign: 'center', color: C.greenDark, marginBottom: '0.75rem' }}>
+            Истражи по категорија
+          </h2>
+          <p style={{ textAlign: 'center', color: C.brown, marginBottom: '3rem' }}>
+            Избери го своето следно искуство
+          </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {categories.map(({ to, emoji, title, desc, color, hover }) => (
-            <Link
-              key={to}
-              to={to}
-              className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${color} text-white p-8 shadow-lg hover:shadow-2xl ${hover} transition-all duration-300 hover:-translate-y-1`}
-            >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-8 translate-x-8 group-hover:scale-125 transition-transform duration-500" />
-              <span className="text-5xl block mb-4">{emoji}</span>
-              <h3 className="text-2xl font-bold mb-2">{title}</h3>
-              <p className="text-white/80 text-sm leading-relaxed">{desc}</p>
-              <span className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-white/90 group-hover:gap-3 transition-all">
-                Погледни → 
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
+            {categories.map(({ to, emoji, title, desc, bg }) => (
+                <Link
+                    key={to}
+                    to={to}
+                    style={{
+                      backgroundColor: bg,
+                      color: C.white,
+                      borderRadius: '1rem',
+                      padding: '2rem',
+                      textDecoration: 'none',
+                      display: 'block',
+                      boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                      transition: 'transform 0.2s, box-shadow 0.2s',
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.transform = 'translateY(-4px)'
+                      e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.15)'
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.transform = 'translateY(0)'
+                      e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)'
+                    }}
+                >
+                  <span style={{ fontSize: '3rem', display: 'block', marginBottom: '1rem' }}>{emoji}</span>
+                  <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>{title}</h3>
+                  <p style={{ opacity: 0.85, fontSize: '0.9rem', lineHeight: 1.6 }}>{desc}</p>
+                  <span style={{ marginTop: '1.5rem', display: 'inline-block', fontWeight: '600', opacity: 0.9 }}>
+                Погледни →
               </span>
-            </Link>
-          ))}
+                </Link>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Footer */}
-      <footer className="border-t border-stone-200 py-8 px-6 text-center text-stone-400 text-sm">
-        © 2026 TripNest.mk — Сите права задржани
-      </footer>
-    </div>
+        {/* Quick actions */}
+        <div style={{ maxWidth: '72rem', margin: '0 auto', padding: '0 1.5rem 5rem' }}>
+
+          {user?.role === 'ADMIN' && (
+              <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                <button
+                    onClick={() => setShowModal(true)}
+                    style={{ padding: '0.75rem 2rem', backgroundColor: C.peach, color: C.white, border: 'none', borderRadius: '9999px', fontWeight: '600', fontSize: '0.95rem', cursor: 'pointer', boxShadow: '0 4px 12px rgba(232,134,106,0.4)' }}
+                >
+                  + Додај сместување
+                </button>
+              </div>
+          )}
+
+          {/* Propose card */}
+          <div style={{
+            backgroundColor: C.white,
+            border: `1px solid ${C.beigedark}`,
+            borderRadius: '1.5rem',
+            padding: '2.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '2rem',
+            flexWrap: 'wrap',
+            boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
+          }}>
+            <div style={{ flex: 1, minWidth: '200px' }}>
+              <span style={{ fontSize: '2.5rem', display: 'block', marginBottom: '0.75rem' }}>🏡</span>
+              <h3 style={{ color: C.greenDark, fontSize: '1.3rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                Знаеш одлично место?
+              </h3>
+              <p style={{ color: C.brown, fontSize: '0.9rem', lineHeight: 1.7 }}>
+                Предложи сместување и помогни им на другите патници да го откријат.
+                Нашиот тим ќе го прегледа твојот предлог.
+              </p>
+            </div>
+            <button
+                onClick={() => setShowPropose(true)}
+                style={{
+                  padding: '0.875rem 1.75rem',
+                  backgroundColor: C.greenDark,
+                  color: C.white,
+                  border: 'none',
+                  borderRadius: '9999px',
+                  fontWeight: '600',
+                  fontSize: '0.9rem',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  boxShadow: '0 4px 12px rgba(74,124,89,0.3)',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={e => e.currentTarget.style.opacity = '0.88'}
+                onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+            >
+              💡 Предложи сместување
+            </button>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <footer style={{
+          borderTop: `1px solid ${C.beigedark}`,
+          padding: '2rem 1.5rem',
+          textAlign: 'center',
+          color: C.brown,
+          fontSize: '0.875rem',
+        }}>
+          © 2026 TripNest.mk — Сите права задржани
+        </footer>
+      </div>
   )
 }
