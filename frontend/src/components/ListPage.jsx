@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import {useState} from 'react'
 import Card from './Card'
 
 const C = {
@@ -23,7 +23,16 @@ const AMENITIES = [
     {key: 'ljubimci', icon: <i className="fa-solid fa-paw"></i>, label: 'Миленичиња'},
 ]
 
-export default function ListPage({ title, emoji, desc, accentColor, basePath, hook, showAmenities = false, showCena = false }) {
+export default function ListPage({
+                                     title,
+                                     emoji,
+                                     desc,
+                                     accentColor,
+                                     basePath,
+                                     hook,
+                                     showAmenities = false,
+                                     showCena = false
+                                 }) {
     const {
         items, loading, error,
         search, setSearch,
@@ -41,19 +50,31 @@ export default function ListPage({ title, emoji, desc, accentColor, basePath, ho
     const color = accentColor || C.greenDark
 
     return (
-        <div style={{ minHeight: '100vh', backgroundColor: C.beige, paddingTop: '64px' }}>
+        <div style={{minHeight: '100vh', backgroundColor: C.beige, paddingTop: '64px'}}>
 
             {/* Header */}
-            <div style={{ backgroundColor: color, color: C.white, padding: '3rem 1.5rem' }}>
-                <div style={{ maxWidth: '80rem', margin: '0 auto' }}>
-                    <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem' }}><span>{emoji}</span> {title}</h1>
-                    <p style={{ opacity: 0.85, fontSize: '1.1rem', marginBottom: '1.5rem' }}>{desc}</p>
+            <div style={{backgroundColor: color, color: C.white, padding: '3rem 1.5rem'}}>
+                <div style={{maxWidth: '80rem', margin: '0 auto'}}>
+                    <h1 style={{fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem'}}>
+                        <span>{emoji}</span> {title}</h1>
+                    <p style={{opacity: 0.85, fontSize: '1.1rem', marginBottom: '1.5rem'}}>{desc}</p>
                     <input
                         type="text"
                         placeholder="Пребарај..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        style={{ width: '100%', maxWidth: '32rem', padding: '0.75rem 1.25rem', borderRadius: '0.75rem', border: 'none', fontSize: '1rem', color: C.text, backgroundColor: C.white, boxShadow: '0 4px 16px rgba(0,0,0,0.15)', outline: 'none' }}
+                        style={{
+                            width: '100%',
+                            maxWidth: '32rem',
+                            padding: '0.75rem 1.25rem',
+                            borderRadius: '0.75rem',
+                            border: 'none',
+                            fontSize: '1rem',
+                            color: C.text,
+                            backgroundColor: C.white,
+                            boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
+                            outline: 'none'
+                        }}
                     />
                 </div>
             </div>
@@ -190,7 +211,7 @@ export default function ListPage({ title, emoji, desc, accentColor, basePath, ho
                                     fontSize: '0.875rem',
                                     cursor: 'pointer',
                                     fontWeight: '500',
-                                    marginLeft:'auto',
+                                    marginLeft: 'auto',
                                 }}
                             >
                                 <i className="fa-solid fa-circle-xmark"></i> Исчисти
@@ -234,17 +255,19 @@ export default function ListPage({ title, emoji, desc, accentColor, basePath, ho
                     )}
                 </div>
 
-                <div style={{marginBottom: '1.5rem',
+                <div style={{
+                    marginBottom: '1.5rem',
                     display: 'flex',
                     justifyContent: 'space-between',
-                    alignItems: 'center'}}>
-                     <span style={{ fontSize: '0.875rem', color: C.textMuted,}}>
+                    alignItems: 'center'
+                }}>
+                     <span style={{fontSize: '0.875rem', color: C.textMuted,}}>
               {items.length} резултати
             </span>
                     {activeFilterCount > 0 && (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
 
-        <span style={{ fontSize: '0.875rem', color: C.textMuted }}>
+        <span style={{fontSize: '0.875rem', color: C.textMuted}}>
             Активни филтри:
         </span>
 

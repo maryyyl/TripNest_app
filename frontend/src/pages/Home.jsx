@@ -66,9 +66,25 @@ export default function Home() {
               <Link to="/gastronomy" style={{ padding: '0.75rem 2rem', backgroundColor: C.beige, color: C.greenDark, fontWeight: '600', borderRadius: '9999px', textDecoration: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
                 Истражи сега
               </Link>
-              <Link to="/register" style={{ padding: '0.75rem 2rem', backgroundColor: 'transparent', color: C.white, fontWeight: '600', borderRadius: '9999px', textDecoration: 'none', border: '2px solid rgba(255,255,255,0.5)' }}>
-                Регистрирај се
-              </Link>
+              {!user && (
+                  <Link
+                      to="/register"
+                      style={{
+                        padding: '0.75rem 2rem',
+                        backgroundColor: 'transparent',
+                        color: C.white,
+                        fontWeight: '600',
+                        borderRadius: '9999px',
+                        textDecoration: 'none',
+                        border: '2px solid rgba(255,255,255,0.5)'
+                      }}
+                  >
+                    Регистрирај се
+                  </Link>
+              )}
+              {/*<Link to="/register" style={{ padding: '0.75rem 2rem', backgroundColor: 'transparent', color: C.white, fontWeight: '600', borderRadius: '9999px', textDecoration: 'none', border: '2px solid rgba(255,255,255,0.5)' }}>*/}
+              {/*  Регистрирај се*/}
+              {/*</Link>*/}
             </div>
           </div>
         </div>

@@ -13,9 +13,9 @@ const C = {
 }
 
 const links = [
-    { to: '/gastronomy', label: 'Гастрономија', icon: 'fa-solid fa-utensils' },
-    { to: '/attractions', label: 'Атракции', icon: 'fa-solid fa-person-hiking' },
-    { to: '/accommodations', label: 'Сместување', icon: 'fa-solid fa-house' },
+    { to: '/gastronomy', label: 'Гастрономија', icon: 'fa-solid fa-utensils',activeColor:'#4a7c59' },
+    { to: '/attractions', label: 'Атракции', icon: 'fa-solid fa-person-hiking',activeColor: '#7fa882', },
+    { to: '/accommodations', label: 'Сместување', icon: 'fa-solid fa-house',activeColor: '#e8866a', },
 ]
 
 export default function Navbar() {
@@ -43,7 +43,7 @@ export default function Navbar() {
 
                 {/* Nav links */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                    {links.map(({ to, label, icon }) => {
+                    {links.map(({ to, label, icon,activeColor }) => {
                         const active = location.pathname.startsWith(to)
                         return (
                             <Link
@@ -58,7 +58,7 @@ export default function Navbar() {
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: '0.5rem',
-                                    backgroundColor: active ? C.greenDark : 'transparent',
+                                    backgroundColor: active ? activeColor : 'transparent',
                                     color: active ? C.white : C.text,
                                     transition: 'all 0.2s',
                                 }}
@@ -119,7 +119,7 @@ export default function Navbar() {
                                 <i className="fa-solid fa-right-to-bracket" style={{ fontSize: '0.85rem' }} />
                                 Најава
                             </Link>
-                            <Link to="/register" style={{ padding: '0.5rem 1.25rem', fontSize: '0.875rem', fontWeight: '600', backgroundColor: C.peach, color: C.white, borderRadius: '9999px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                            <Link to="/register" style={{ padding: '0.5rem 1.25rem', fontSize: '0.875rem', fontWeight: '600', backgroundColor: C.greenDark, color: C.white, borderRadius: '9999px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                                 <i className="fa-solid fa-user-plus" style={{ fontSize: '0.85rem' }} />
                                 Регистрација
                             </Link>
