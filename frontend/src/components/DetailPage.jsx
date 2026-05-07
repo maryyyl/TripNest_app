@@ -54,14 +54,24 @@ export default function DetailPage({ fetchFn, backPath, accentColor }) {
 
       <div style={{ maxWidth: '52rem', margin: '0 auto', padding: '2.5rem 1.5rem' }}>
         <button
-          onClick={() => navigate(-1)}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', color: C.textMuted, fontSize: '0.875rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}
+            onClick={() => navigate(-1)}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: C.textMuted,
+              fontSize: '0.875rem',
+              marginBottom: '1.5rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.25rem'
+            }}
         >
-          ← Назад
+          <i className="fa-solid fa-circle-arrow-left"></i> Назад
         </button>
 
         {item.opis && (
-          <p style={{ color: C.text, fontSize: '1.1rem', lineHeight: 1.8, marginBottom: '2rem' }}>{item.opis}</p>
+            <p style={{ color: C.text, fontSize: '1.1rem', lineHeight: 1.8, marginBottom: '2rem' }}>{item.opis}</p>
         )}
 
         {item.tagovi?.length > 0 && (

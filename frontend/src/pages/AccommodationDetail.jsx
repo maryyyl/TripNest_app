@@ -250,6 +250,7 @@ export default function AccommodationDetail() {
     ])
         .then(([res, dates, imgs]) => {
           setItem(res.data)
+            console.log(res.data)
           setBookedDates(dates.data)
           setSliki(imgs.data)
         })
@@ -265,6 +266,11 @@ export default function AccommodationDetail() {
 
   if (!item) return null
 
+    const formatTime= function (time) {
+        if (!time) return '';
+
+        return time.slice(0, 5);
+    }
   const budget = item.budgetLevel ? budgetLabel[item.budgetLevel] : null
   const activeAmenities = AMENITIES.filter(a => item[a.key])
   const mapsQuery = encodeURIComponent(item.adresa || item.lokacija || item.naslov)
@@ -276,6 +282,20 @@ export default function AccommodationDetail() {
 
           {/* Carousel */}
           <div style={{maxWidth: '1100px', margin: '0 auto'}}>
+              <button onClick={() => navigate(-1)} style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: C.textMuted,
+                  fontSize: '0.875rem',
+                  marginBottom: '1.5rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.25rem',
+                  marginTop: '1rem',
+              }}>
+                  <i className="fa-solid fa-circle-arrow-left"></i> Назад
+              </button>
               <ImageCarousel images={sliki} mainImage={item.slika} alt={item.naslov}/>
           </div>
 
@@ -380,19 +400,7 @@ export default function AccommodationDetail() {
 
                   {/* Left */}
                   <div>
-                      <button onClick={() => navigate(-1)} style={{
-                          background: 'none',
-                          border: 'none',
-                          cursor: 'pointer',
-                          color: C.textMuted,
-                          fontSize: '0.875rem',
-                          marginBottom: '1.5rem',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.25rem'
-                      }}>
-                          ← Назад
-                      </button>
+
 
                       {item.opis && (
                           <p style={{
@@ -437,30 +445,30 @@ export default function AccommodationDetail() {
                           </div>
                       )}
 
-                      {/* Tags */}
-                      {item.tagovi?.length > 0 && (
-                          <div style={{marginBottom: '2rem'}}>
-                              <h3 style={{
-                                  fontSize: '1rem',
-                                  fontWeight: '700',
-                                  color: C.text,
-                                  marginBottom: '0.75rem'
-                              }}>Тагови</h3>
-                              <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.5rem'}}>
-                                  {item.tagovi.map((tag) => (
-                                      <span key={tag} style={{
-                                          padding: '0.375rem 0.875rem',
-                                          fontSize: '0.8rem',
-                                          borderRadius: '9999px',
-                                          backgroundColor: C.beigeDark,
-                                          color: C.brown
-                                      }}>
-                      {tag.replace(/_/g, ' ')}
-                    </span>
-                                  ))}
-                              </div>
-                          </div>
-                      )}
+                    {/*  /!* Tags *!/*/}
+                    {/*  {item.tagovi?.length > 0 && (*/}
+                    {/*      <div style={{marginBottom: '2rem'}}>*/}
+                    {/*          <h3 style={{*/}
+                    {/*              fontSize: '1rem',*/}
+                    {/*              fontWeight: '700',*/}
+                    {/*              color: C.text,*/}
+                    {/*              marginBottom: '0.75rem'*/}
+                    {/*          }}>Тагови</h3>*/}
+                    {/*          <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.5rem'}}>*/}
+                    {/*              {item.tagovi.map((tag) => (*/}
+                    {/*                  <span key={tag} style={{*/}
+                    {/*                      padding: '0.375rem 0.875rem',*/}
+                    {/*                      fontSize: '0.8rem',*/}
+                    {/*                      borderRadius: '9999px',*/}
+                    {/*                      backgroundColor: C.beigeDark,*/}
+                    {/*                      color: C.brown*/}
+                    {/*                  }}>*/}
+                    {/*  {tag.replace(/_/g, ' ')}*/}
+                    {/*</span>*/}
+                    {/*              ))}*/}
+                    {/*          </div>*/}
+                    {/*      </div>*/}
+                    {/*  )}*/}
 
                       {/* Google Maps */}
                       <div style={{marginBottom: '2rem'}}>
@@ -572,10 +580,10 @@ export default function AccommodationDetail() {
                                   color: C.textMuted
                               }}>
         <span>
-            <strong style={{color: C.text}}>Check-in:</strong> 12:00
+            <strong style={{color: C.text}}>Check-in:</strong> <span>{formatTime(item.checkIn)}</span>
         </span>
                                   <span>
-            <strong style={{color: C.text}}>Check-out:</strong> 11:00
+            <strong style={{color: C.text}}>Check-out:</strong> <span>{formatTime(item.checkOut)}</span>
         </span>
                               </div>
                           </div>

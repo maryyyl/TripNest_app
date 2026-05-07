@@ -46,16 +46,43 @@ export default function GastronomyDetail() {
       <div style={{ minHeight: '100vh', backgroundColor: C.beige, paddingTop: '64px' }}>
 
         {/* Carousel */}
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <ImageCarousel images={sliki} mainImage={item.slika} alt={item.naslov} />
-        </div>
+          <div style={{maxWidth: '1100px', margin: '0 auto'}}>
+              <button onClick={() => navigate(-1)} style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: C.textMuted,
+                  fontSize: '0.875rem',
+                  marginBottom: '1.5rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.25rem',
+                  marginTop: '1rem',
+              }}>
+                  <i className="fa-solid fa-circle-arrow-left"></i> Назад
+              </button>
+              <ImageCarousel images={sliki} mainImage={item.slika} alt={item.naslov}/>
+          </div>
 
-        {/* Title block */}
-        <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '1.5rem 1.5rem 0' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
-            <div>
-              {item.status && (
-                  <span style={{ display: 'inline-block', padding: '0.25rem 0.75rem', fontSize: '0.75rem', fontWeight: 'bold', borderRadius: '9999px', backgroundColor: C.peach, color: C.white, marginBottom: '0.5rem' }}>
+          {/* Title block */}
+          <div style={{maxWidth: '1100px', margin: '0 auto', padding: '1.5rem 1.5rem 0'}}>
+              <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
+                  flexWrap: 'wrap',
+                  gap: '1rem'
+              }}>
+                  <div>
+                      {item.status && (
+                          <span style={{
+                              display: 'inline-block',
+                              padding: '0.25rem 0.75rem',
+                              fontSize: '0.75rem',
+                              fontWeight: 'bold',
+                              borderRadius: '9999px',
+                              backgroundColor: C.peach,
+                              color: C.white, marginBottom: '0.5rem' }}>
                 {item.status}
               </span>
               )}
@@ -69,28 +96,25 @@ export default function GastronomyDetail() {
 
         {/* Content */}
         <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 1.5rem' }}>
-          <button onClick={() => navigate(-1)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: C.textMuted, fontSize: '0.875rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-            ← Назад
-          </button>
 
           <div style={{ maxWidth: '720px' }}>
             {item.opis && (
                 <p style={{ color: C.text, fontSize: '1.05rem', lineHeight: 1.85, marginBottom: '2rem' }}>{item.opis}</p>
             )}
 
-            {/* Tags */}
-            {item.tagovi?.length > 0 && (
-                <div style={{ marginBottom: '2rem' }}>
-                  <h3 style={{ fontSize: '1rem', fontWeight: '700', color: C.text, marginBottom: '0.75rem' }}>Тагови</h3>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                    {item.tagovi.map((tag) => (
-                        <span key={tag} style={{ padding: '0.375rem 0.875rem', fontSize: '0.8rem', borderRadius: '9999px', backgroundColor: C.beigeDark, color: C.brown }}>
-                    {tag.replace(/_/g, ' ')}
-                  </span>
-                    ))}
-                  </div>
-                </div>
-            )}
+            {/*/!* Tags *!/*/}
+            {/*{item.tagovi?.length > 0 && (*/}
+            {/*    <div style={{ marginBottom: '2rem' }}>*/}
+            {/*      <h3 style={{ fontSize: '1rem', fontWeight: '700', color: C.text, marginBottom: '0.75rem' }}>Тагови</h3>*/}
+            {/*      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>*/}
+            {/*        {item.tagovi.map((tag) => (*/}
+            {/*            <span key={tag} style={{ padding: '0.375rem 0.875rem', fontSize: '0.8rem', borderRadius: '9999px', backgroundColor: C.beigeDark, color: C.brown }}>*/}
+            {/*        {tag.replace(/_/g, ' ')}*/}
+            {/*      </span>*/}
+            {/*        ))}*/}
+            {/*      </div>*/}
+            {/*    </div>*/}
+            {/*)}*/}
 
             {/* CTA */}
             {item.link && (
