@@ -147,7 +147,7 @@ export default function AddAccommodationModal({ onClose, onAdded }) {
               <input name="lokacija" value={form.lokacija} onChange={handleChange} required style={inputStyle} placeholder="Охрид" />
             </div>
             <div>
-              <label style={labelStyle}>Цена (ден/ноќ)</label>
+              <label style={labelStyle}>Цена (денари/ноќ)</label>
               <input name="cenaOdDen" type="number" value={form.cenaOdDen} onChange={handleChange} style={inputStyle} placeholder="2500" />
             </div>
           </div>

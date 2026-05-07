@@ -1,4 +1,4 @@
-package mk.ukim.finki.web.backend.service;
+package mk.ukim.finki.web.backend.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import mk.ukim.finki.web.backend.model.Reservation;
@@ -8,6 +8,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import jakarta.mail.internet.MimeMessage;
+
+import java.time.LocalTime;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +27,10 @@ public class EmailService {
             String username = reservation.getUser().getUsername();
             String naslov = reservation.getAccommodation().getNaslov();
             String status = reservation.getStatus().name();
+            LocalTime checkIn=reservation.getAccommodation().getCheckIn();
+            LocalTime checkOut=reservation.getAccommodation().getCheckOut();
+
+
 
             helper.setTo(userEmail);
             helper.setSubject(buildSubject(status, naslov));

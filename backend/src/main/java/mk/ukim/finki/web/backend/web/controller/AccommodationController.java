@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import mk.ukim.finki.web.backend.model.AccommodationImage;
+import mk.ukim.finki.web.backend.repository.AccommodationImageRepository;
+
 @RestController
 @RequestMapping("/api/accommodations")
 @RequiredArgsConstructor
@@ -16,6 +19,12 @@ import java.util.List;
 public class AccommodationController {
 
     private final AccommodationService accommodationService;
+    private final AccommodationImageRepository imageRepository;
+
+    @GetMapping("/{id}/sliki")
+    public ResponseEntity<List<AccommodationImage>> getImages(@PathVariable Long id) {
+        return ResponseEntity.ok(imageRepository.findByAccommodation_IdOrderByRedosledAsc(id));
+    }
 
     // ── Јавни endpoints ───────────────────────────────────────────────────────
 

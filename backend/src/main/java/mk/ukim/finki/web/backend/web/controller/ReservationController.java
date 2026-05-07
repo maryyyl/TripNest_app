@@ -1,4 +1,4 @@
-package mk.ukim.finki.web.backend.web.controller;
+package mk.ukim.finki.web.backend.web;
 
 import lombok.RequiredArgsConstructor;
 import mk.ukim.finki.web.backend.model.Reservation;
@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -19,6 +20,12 @@ import java.util.List;
 public class ReservationController {
 
     private final ReservationService reservationService;
+
+    // Јавен — зафатени датуми за сместување
+    @GetMapping("/booked-dates/{accommodationId}")
+    public ResponseEntity<List<LocalDate>> getBookedDates(@PathVariable Long accommodationId) {
+        return ResponseEntity.ok(reservationService.getBookedDates(accommodationId));
+    }
 
     // Корисник — креира резервација
     @PostMapping

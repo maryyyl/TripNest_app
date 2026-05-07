@@ -5,8 +5,15 @@ export default function useItems(fetchFn) {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     const [search, setSearch] = useState('')
-    const [selectedTags, setSelectedTags] = useState([])
     const [selectedLokacija, setSelectedLokacija] = useState('')
+    const [sortCena, setSortCena] = useState('') // 'asc' | 'desc' | ''
+    const [cenaMin, setCenaMin] = useState('')
+    const [cenaMax, setCenaMax] = useState('')
+    const [amenities, setAmenities] = useState({
+        wifi: false, bazen: false, spa: false,
+        balkon: false, parking: false, kujna: false,
+        klima: false, ljubimci: false,
+    })
 
     useEffect(() => {
         fetchFn()
@@ -15,47 +22,64 @@ export default function useItems(fetchFn) {
             .finally(() => setLoading(false))
     }, [])
 
-    const allTags = useMemo(() => {
-        const tags = new Set()
-        items.forEach((item) => item.tagovi?.forEach((t) => tags.add(t)))
-        return [...tags].sort()
-    }, [items])
-
     const allLokacii = useMemo(() => {
         return [...new Set(items.map((i) => i.lokacija).filter(Boolean))].sort()
     }, [items])
 
+    const hasAmenityFilters = Object.values(amenities).some(Boolean)
+
     const filtered = useMemo(() => {
-        return items.filter((item) => {
+        let result = items.filter((item) => {
             const matchSearch = search === '' ||
                 item.naslov?.toLowerCase().includes(search.toLowerCase()) ||
                 item.opis?.toLowerCase().includes(search.toLowerCase()) ||
                 item.lokacija?.toLowerCase().includes(search.toLowerCase())
 
-            const matchTags = selectedTags.length === 0 ||
-                selectedTags.every((tag) => item.tagovi?.includes(tag))
+            const matchLokacija = selectedLokacija === '' || item.lokacija === selectedLokacija
 
-            const matchLokacija = selectedLokacija === '' ||
-                item.lokacija === selectedLokacija
+            const matchCenaMin = cenaMin === '' || (item.cenaOdDen != null && Number(item.cenaOdDen) >= Number(cenaMin))
+            const matchCenaMax = cenaMax === '' || (item.cenaOdDen != null && Number(item.cenaOdDen) <= Number(cenaMax))
 
-            return matchSearch && matchTags && matchLokacija
+            const matchAmenities = !hasAmenityFilters || Object.entries(amenities).every(([key, val]) => !val || item[key] === true)
+
+            return matchSearch && matchLokacija && matchCenaMin && matchCenaMax && matchAmenities
         })
-    }, [items, search, selectedTags, selectedLokacija])
 
-    const toggleTag = (tag) => {
-        setSelectedTags((prev) =>
-            prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
-        )
+        if (sortCena === 'asc') result = [...result].sort((a, b) => (a.cenaOdDen || 0) - (b.cenaOdDen || 0))
+        if (sortCena === 'desc') result = [...result].sort((a, b) => (b.cenaOdDen || 0) - (a.cenaOdDen || 0))
+
+        return result
+    }, [items, search, selectedLokacija, cenaMin, cenaMax, amenities, sortCena])
+
+    const toggleAmenity = (key) => {
+        setAmenities(prev => ({ ...prev, [key]: !prev[key] }))
     }
+
+    const resetFilters = () => {
+        setSearch('')
+        setSelectedLokacija('')
+        setSortCena('')
+        setCenaMin('')
+        setCenaMax('')
+        setAmenities({ wifi: false, bazen: false, spa: false, balkon: false, parking: false, kujna: false, klima: false, ljubimci: false })
+    }
+
+    const activeFilterCount = [
+        selectedLokacija, sortCena, cenaMin, cenaMax,
+        ...Object.values(amenities)
+    ].filter(Boolean).length
 
     return {
         items: filtered,
-        loading,
-        error,
+        loading, error,
         search, setSearch,
-        selectedTags, toggleTag,
         selectedLokacija, setSelectedLokacija,
-        allTags,
+        sortCena, setSortCena,
+        cenaMin, setCenaMin,
+        cenaMax, setCenaMax,
+        amenities, toggleAmenity,
         allLokacii,
+        resetFilters,
+        activeFilterCount,
     }
 }

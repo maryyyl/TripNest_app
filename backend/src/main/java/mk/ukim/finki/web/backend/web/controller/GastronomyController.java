@@ -1,6 +1,8 @@
 package mk.ukim.finki.web.backend.web.controller;
 
 import mk.ukim.finki.web.backend.model.Gastronomy;
+import mk.ukim.finki.web.backend.model.GastronomyImage;
+import mk.ukim.finki.web.backend.repository.GastronomyImageRepository;
 import mk.ukim.finki.web.backend.service.GastronomyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,12 @@ import java.util.List;
 public class GastronomyController {
 
     private final GastronomyService gastronomyService;
+    private final GastronomyImageRepository imageRepository;
+
+    @GetMapping("/{id}/sliki")
+    public ResponseEntity<List<GastronomyImage>> getImages(@PathVariable Long id) {
+        return ResponseEntity.ok(imageRepository.findByGastronomy_IdOrderByRedosledAsc(id));
+    }
 
 
     @GetMapping

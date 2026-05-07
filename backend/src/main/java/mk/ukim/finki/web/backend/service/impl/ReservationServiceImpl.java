@@ -12,9 +12,10 @@ import mk.ukim.finki.web.backend.repository.UserRepository;
 import mk.ukim.finki.web.backend.service.ReservationService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
-import mk.ukim.finki.web.backend.service.EmailService;
+import mk.ukim.finki.web.backend.service.impl.EmailService;
 
 @Service
 @RequiredArgsConstructor
@@ -75,5 +76,15 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void delete(Long id) {
         reservationRepository.deleteById(id);
+    }
+
+    @Override
+    public List<LocalDate> getBookedDates(Long accommodationId) {
+        List<Reservation> approved = reservationRepository.findApprovedByAccommodationId(accommodationId);
+        return approved.stream()
+                .flatMap(r -> r.getDatumOd().datesUntil(r.getDatumDo().plusDays(1)))
+                .distinct()
+                .sorted()
+                .collect(java.util.stream.Collectors.toList());
     }
 }

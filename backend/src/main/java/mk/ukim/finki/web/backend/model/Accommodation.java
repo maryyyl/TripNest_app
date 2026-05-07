@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import mk.ukim.finki.web.backend.model.enums.BudgetLevel;
 
-import java.math.BigDecimal;
+import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -20,6 +20,8 @@ public class Accommodation extends BaseEntity {
 
     private String lokacija;
 
+    private String adresa;
+
     private Double cenaOdDen;
 
     private String status;
@@ -32,6 +34,31 @@ public class Accommodation extends BaseEntity {
     @Column(length = 2000)
     private String opis;
 
+    // Нови полиња
+    private Integer kapacitet;
+
+    private Boolean wifi;
+
+    private Boolean spa;
+
+    private Boolean bazen;
+
+    private Boolean balkon;
+
+    private Boolean parking;
+
+    private Boolean kujna;
+
+    private Boolean klima;
+
+    private Boolean ljubimci;
+
+    @Column(name = "check_in")
+    private LocalTime checkIn;
+
+    @Column(name = "check_out")
+    private LocalTime checkOut;
+
     @ElementCollection
     @CollectionTable(
             name = "smestuvanje_tagovi",
@@ -42,15 +69,9 @@ public class Accommodation extends BaseEntity {
 
     @Transient
     public BudgetLevel getBudgetLevel() {
-
         if (cenaOdDen == null) return null;
-
-        if (cenaOdDen < 2000) {
-            return BudgetLevel.LOW;
-        } else if (cenaOdDen < 5000) {
-            return BudgetLevel.MEDIUM;
-        } else {
-            return BudgetLevel.HIGH;
-        }
+        if (cenaOdDen < 2000) return BudgetLevel.LOW;
+        else if (cenaOdDen < 5000) return BudgetLevel.MEDIUM;
+        else return BudgetLevel.HIGH;
     }
 }

@@ -6,6 +6,10 @@ import mk.ukim.finki.web.backend.model.enums.RequestStatus;
 
 import java.util.List;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+
 public interface ReservationService {
 
     Reservation create(ReservationRequestDTO dto, String username);
@@ -19,4 +23,6 @@ public interface ReservationService {
     Reservation updateStatus(Long id, RequestStatus status);
 
     void delete(Long id);
+
+    List<LocalDate> getBookedDates(Long accommodationId);
 }

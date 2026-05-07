@@ -57,14 +57,14 @@ export default function Card({ item, basePath }) {
                 </h3>
 
                 {item.lokacija && (
-                    <p style={{ fontSize: '0.85rem', color: C.textMuted, marginTop: '0.25rem' }}>
-                        📍 {item.lokacija}
+                    <p style={{fontSize: '0.85rem', color: C.textMuted, marginTop: '0.25rem'}}>
+                        <i style={{color: 'darkred',}} className="fa-solid fa-location-dot"></i> {item.lokacija}
                     </p>
                 )}
 
                 {item.cenaOdDen && (
                     <p style={{ fontSize: '0.85rem', fontWeight: '600', color: C.greenDark, marginTop: '0.5rem' }}>
-                        од {Number(item.cenaOdDen).toLocaleString()} ден/ноќ
+                        од {Number(item.cenaOdDen).toLocaleString()} денари
                     </p>
                 )}
             </div>

@@ -1,6 +1,8 @@
 package mk.ukim.finki.web.backend.web.controller;
 
 import mk.ukim.finki.web.backend.model.Attraction;
+import mk.ukim.finki.web.backend.model.AttractionImage;
+import mk.ukim.finki.web.backend.repository.AttractionImageRepository;
 import mk.ukim.finki.web.backend.service.AttractionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,12 @@ import java.util.List;
 public class AttractionController {
 
     private final AttractionService attractionService;
+    private final AttractionImageRepository attractionImageRepository;
+
+    @GetMapping("/{id}/sliki")
+    public ResponseEntity<List<AttractionImage>> getImages(@PathVariable Long id) {
+        return ResponseEntity.ok(attractionImageRepository.findByAttraction_IdOrderByRedosledAsc(id));
+    }
 
     // ── Јавни endpoints ───────────────────────────────────────────────────────
 

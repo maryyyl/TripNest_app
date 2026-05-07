@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import mk.ukim.finki.web.backend.service.EmailService;
+import mk.ukim.finki.web.backend.service.impl.EmailService;
 
 @Service
 @RequiredArgsConstructor

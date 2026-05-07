@@ -1,6 +1,5 @@
 package mk.ukim.finki.web.backend.config;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -62,6 +61,8 @@ public class SecurityConfig {
                         .requestMatchers("GET", "/api/gastronomy/**").permitAll()
                         .requestMatchers("GET", "/api/attractions/**").permitAll()
                         .requestMatchers("GET", "/api/accommodations/**").permitAll()
+                        .requestMatchers("GET", "/api/reservations/booked-dates/**").permitAll()
+                        .requestMatchers("GET", "/api/reviews/latest").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
