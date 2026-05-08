@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import {Link, useLocation, useNavigate} from 'react-router-dom'
 import { authApi } from '../api'
 import useAuthStore from '../store/authStore'
 import C from '../colors'
@@ -11,6 +11,8 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
+  const action = location.state?.action
+  const accommodation = location.state?.accommodation
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
@@ -18,7 +20,17 @@ export default function LoginPage() {
     try {
       const res = await authApi.login(form)
       login(res.data.token, res.data.user)
-      navigate('/')
+      if (action === 'OPEN_RESERVATION_MODAL') {
+        navigate(`/accommodation/${accommodation.id}`, {
+          replace: true,
+          state: {
+            openReservationModal: true,
+          },
+        })
+      } else {
+        navigate('/', { replace: true })
+      }
+
     } catch {
       setError('Погрешно корисничко име или лозинка')
     } finally {

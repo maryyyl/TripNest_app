@@ -533,24 +533,6 @@ export default function AccommodationDetail() {
                               <i className="fa-solid fa-calendar-check"></i> Резервирај сега
                           </button>
 
-                          {item.link && (
-                              <a href={item.link} target="_blank" rel="noopener noreferrer"
-                                 style={{
-                                     display: 'block',
-                                     textAlign: 'center',
-                                     marginTop: '0.75rem',
-                                     padding: '0.75rem',
-                                     backgroundColor: C.beige,
-                                     color: C.text,
-                                     borderRadius: '0.875rem',
-                                     fontWeight: '600',
-                                     textDecoration: 'none',
-                                     fontSize: '0.9rem',
-                                     border: `1px solid ${C.beigeDark}`
-                                 }}>
-                                  Посети страница →
-                              </a>
-                          )}
                       </div>
 
                       {/* Calendar */}
@@ -580,10 +562,10 @@ export default function AccommodationDetail() {
                                   color: C.textMuted
                               }}>
         <span>
-            <strong style={{color: C.text}}>Check-in:</strong> <span>{formatTime(item.checkIn)}</span>
+            <strong style={{color: C.text}}>Check-in:</strong> <span style={{fontWeight:800,fontSize:'1.2rem'}}>{formatTime(item.checkIn)}</span>
         </span>
                                   <span>
-            <strong style={{color: C.text}}>Check-out:</strong> <span>{formatTime(item.checkOut)}</span>
+            <strong style={{color: C.text}}>Check-out:</strong> <span style={{fontWeight:800,fontSize:'1.2rem'}}>{formatTime(item.checkOut)}</span>
         </span>
                               </div>
                           </div>

@@ -93,8 +93,13 @@ export default function HomeReviews() {
                                     />
                                 )}
                             </div>
-                            <p style={{ color: C.greenDark, fontSize: '0.78rem', fontWeight: '600', marginTop: '0.5rem' }}>
-                                📍 {r.accommodation?.naslov}
+                            <p style={{
+                                color: C.greenDark,
+                                fontSize: '0.78rem',
+                                fontWeight: '600',
+                                marginTop: '0.5rem'
+                            }}>
+                                <i style={{color:'darkred',}} className="fa-solid fa-location-dot"></i> {r.accommodation?.naslov}
                             </p>
                         </div>
                     </Link>

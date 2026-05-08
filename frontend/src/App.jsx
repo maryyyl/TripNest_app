@@ -11,6 +11,7 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import AdminPage from './pages/AdminPage'
 import useAuthStore from './store/authStore'
+import ContactPage from "./pages/ContactPage.jsx";
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useAuthStore()
@@ -39,6 +40,7 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/admin" element={<AdminRoute><AdminPage /></AdminRoute>} />
+          <Route path="/contact" element={<ContactPage />} />
         </Routes>
       </BrowserRouter>
   )

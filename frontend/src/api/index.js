@@ -73,3 +73,10 @@ export const reviewApi = {
 export const latestReviewsApi = {
     get: (limit = 6) => api.get('/api/reviews/latest', { params: { limit } }),
 }
+export const contactAdminApi = {
+    getAll: () => api.get('/api/contact'),
+    getUnreadCount: () => api.get('/api/contact/unread-count'),
+    markAsRead: (id) => api.put(`/api/contact/${id}/procitana`),
+    delete: (id) => api.delete(`/api/contact/${id}`),
+    send:(data)=>api.post(`/api/contact`,data)
+}

@@ -79,16 +79,24 @@ export default function AttractionDetail() {
                 <ImageCarousel images={sliki} mainImage={item.slika} alt={item.naslov}/>
             </div>
 
-            {/* Title block */}
-            <div style={{maxWidth: '1100px', margin: '0 auto', padding: '1.5rem 1.5rem 0'}}>
+            <div style={{
+                maxWidth: '1100px',
+                margin: '0 auto',
+                padding: '1.5rem 1.5rem 0'
+            }}>
                 <div style={{
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'flex-start',
-                    flexWrap: 'wrap',
                     gap: '1rem'
                 }}>
-                    <div>
+
+                    {/* LEFT SIDE */}
+                    <div style={{
+                        flex: 1,
+                        minWidth: 0,
+                        maxWidth: '75%'
+                    }}>
                         {item.status && (
                             <span style={{
                                 display: 'inline-block',
@@ -100,16 +108,21 @@ export default function AttractionDetail() {
                                 color: C.white,
                                 marginBottom: '0.5rem'
                             }}>
-                {item.status}
-              </span>
+                    {item.status}
+                </span>
                         )}
+
                         <h1 style={{
                             fontSize: '2rem',
                             fontWeight: '900',
                             color: C.text,
                             marginBottom: '0.5rem',
-                            lineHeight: 1.2
-                        }}>{item.naslov}</h1>
+                            lineHeight: 1.2,
+                            wordBreak: 'break-word'
+                        }}>
+                            {item.naslov}
+                        </h1>
+
                         <div style={{
                             display: 'flex',
                             gap: '1.25rem',
@@ -117,23 +130,40 @@ export default function AttractionDetail() {
                             color: C.textMuted,
                             fontSize: '0.95rem'
                         }}>
-                            {item.lokacija && <span><i style={{color: 'darkred',}}
-                                                       className="fa-solid fa-location-dot"></i> {item.lokacija}</span>}
+                            {item.lokacija && (
+                                <span>
+                        <i style={{color: 'darkred'}} className="fa-solid fa-location-dot"></i>
+                                    {' '}{item.lokacija}
+                    </span>
+                            )}
                         </div>
                     </div>
+
+                    {/* RIGHT SIDE (FIXED PRICE) */}
                     {item.cenaOdDen && (
-                        <div style={{textAlign: 'right'}}>
+                        <div style={{
+                            flexShrink: 0,
+                            textAlign: 'right',
+                            minWidth: '140px'
+                        }}>
                             <div style={{
                                 fontSize: '1.75rem',
                                 fontWeight: '900',
                                 color: C.greenDark
-                            }}>{Number(item.cenaOdDen).toLocaleString()}</div>
-                            <div style={{fontSize: '0.85rem', color: C.textMuted}}>ден / лице</div>
+                            }}>
+                                {Number(item.cenaOdDen).toLocaleString()}
+                            </div>
+                            <div style={{
+                                fontSize: '0.85rem',
+                                color: C.textMuted
+                            }}>
+                                ден / лице
+                            </div>
                         </div>
                     )}
+
                 </div>
             </div>
-
             {/* Content */}
             <div style={{maxWidth: '1100px', margin: '0 auto', padding: '2rem 1.5rem'}}>
 

@@ -87,16 +87,7 @@ export default function DetailPage({ fetchFn, backPath, accentColor }) {
           </div>
         )}
 
-        {item.link && (
-          <a
-            href={item.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.5rem', backgroundColor: color, color: C.white, borderRadius: '0.75rem', fontWeight: '600', textDecoration: 'none' }}
-          >
-            Посети страница →
-          </a>
-        )}
+
       </div>
     </div>
   )

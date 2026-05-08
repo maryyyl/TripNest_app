@@ -125,4 +125,6 @@ public class EmailService {
                 """.formatted(color, icon, statusText, username, naslov, statusText,
                 approved ? "<p style='color: #4a7c59;'>🏡 Сместувањето е веќе достапно на платформата!</p>" : "");
     }
+
+
 }

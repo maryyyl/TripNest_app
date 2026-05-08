@@ -13,7 +13,7 @@ import java.util.Date;
 public class JwtUtil {
 
     private static final String SECRET = "tripnest-mk-super-secret-key-2024-very-long-string";
-    private static final long EXPIRATION_MS = 86400000L; // 24 часа
+    private static final long EXPIRATION_MS = 1800000L; // 30 min
 
     private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
 

@@ -135,23 +135,6 @@ export default function GastronomyDetail() {
                     )}
 
 
-                    {/* CTA */}
-                    {item.link && (
-                        <a href={item.link} target="_blank" rel="noopener noreferrer"
-                           style={{
-                               display: 'inline-block',
-                               padding: '0.875rem 2rem',
-                               backgroundColor: C.greenDark,
-                               color: C.white,
-                               borderRadius: '0.875rem',
-                               fontWeight: '700',
-                               textDecoration: 'none',
-                               fontSize: '1rem',
-                               boxShadow: '0 4px 16px rgba(74,124,89,0.4)'
-                           }}>
-                            🍽️ Посети страница
-                        </a>
-                    )}
                 </div>
             </div>
         </div>

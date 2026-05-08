@@ -16,6 +16,7 @@ const links = [
     { to: '/gastronomy', label: 'Гастрономија', icon: 'fa-solid fa-utensils',activeColor:'#4a7c59' },
     { to: '/attractions', label: 'Атракции', icon: 'fa-solid fa-person-hiking',activeColor: '#7fa882', },
     { to: '/accommodations', label: 'Сместување', icon: 'fa-solid fa-house',activeColor: '#e8866a', },
+    { to: '/contact', label: 'Контакт', icon: 'fa-solid fa-paper-plane',activeColor: '#4a7c59' },
 ]
 
 export default function Navbar() {
@@ -101,8 +102,8 @@ export default function Navbar() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     {isAuthenticated ? (
                         <>
-              <span style={{ fontSize: '0.875rem', color: C.brown, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <i className="fa-solid fa-circle-user" style={{ fontSize: '1rem' }} />
+              <span style={{ fontSize: '0.875rem', color: C.greenDark, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <i className="fa-solid fa-circle-user" style={{ fontSize: '1rem',color:C.greenDark}} />
                   {user?.username}
               </span>
                             <button

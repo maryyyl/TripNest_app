@@ -38,8 +38,8 @@ export default function ProposeAccommodationModal({ onClose }) {
         <div onClick={onClose} style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)', zIndex: 100, backdropFilter: 'blur(2px)' }} />
         <div style={modalStyle}>
           <div style={{ textAlign: 'center', padding: '2rem' }}>
-            <p style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔒</p>
-            <h2 style={{ color: C.greenDark, fontWeight: 'bold', marginBottom: '0.5rem' }}>Потребна е најава</h2>
+            <p style={{fontSize: '3rem', marginBottom: '1rem'}}><i className="fa-solid fa-lock"></i></p>
+            <h2 style={{color: C.greenDark, fontWeight: 'bold', marginBottom: '0.5rem' }}>Потребна е најава</h2>
             <p style={{ color: C.textMuted, marginBottom: '1.5rem' }}>За да предложиш сместување, мора да си најавен.</p>
             <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
               <button onClick={onClose} style={btnSecondary}>Откажи</button>
@@ -76,18 +76,21 @@ export default function ProposeAccommodationModal({ onClose }) {
       <div style={modalStyle}>
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: C.greenDark }}>🏡 Предложи сместување</h2>
+          <h2 style={{fontSize: '1.25rem', fontWeight: 'bold', color: C.greenDark}}><i
+              className="fa-solid fa-house"></i> Предложи сместување</h2>
           <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: C.textMuted }}>×</button>
         </div>
 
         <div style={{ backgroundColor: C.beige, borderRadius: '0.75rem', padding: '0.75rem 1rem', marginBottom: '1.5rem' }}>
-          <p style={{ fontSize: '0.875rem', color: C.brown }}>
-            💡 Твојот предлог ќе го прегледа администраторот и ако го одобри, ќе се додаде на платформата.
+          <p style={{fontSize: '0.875rem', color: C.brown}}>
+            <i className="fa-regular fa-lightbulb"></i> Твојот предлог ќе го прегледа администраторот и ако го одобри,
+            истиот ќе се додаде на платформата.
+            <br/>За статусот на твојот предлог ќе бидеш известен преку <b>e-mail</b>.
           </p>
         </div>
 
         {success ? (
-          <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
+            <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
             <p style={{ fontSize: '3rem', marginBottom: '0.75rem' }}>✅</p>
             <h3 style={{ color: C.greenDark, fontWeight: 'bold', marginBottom: '0.5rem' }}>Предлогот е испратен!</h3>
             <p style={{ color: C.textMuted, fontSize: '0.9rem', marginBottom: '1.5rem' }}>

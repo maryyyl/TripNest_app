@@ -21,7 +21,7 @@ export default function ImageCarousel({ images = [], mainImage, alt = '' }) {
     return (
         <div style={{
             position: 'relative',
-            height: '32rem',
+            height: '36rem',
             backgroundColor: '#e8d5c4',
             overflow: 'hidden',
             maxWidth: '1000px',

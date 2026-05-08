@@ -67,6 +67,10 @@ export default function Card({ item, basePath }) {
                         од {Number(item.cenaOdDen).toLocaleString()} денари
                     </p>
                 )}
+                {item.cenaOdDen===null && (
+                    <p style={{ fontSize: '0.85rem', fontWeight: '600', color: C.greenDark, marginTop: '0.5rem' }}>Бесплатно</p>
+
+                )}
             </div>
         </Link>
     )

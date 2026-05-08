@@ -171,26 +171,54 @@ export default function Home() {
 
             {/* Quick Links */}
             <div style={{ flex: '1 1 200px' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-                <a href="/gastronomy" style={{ textDecoration: 'none', color: C.brown, display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                  <i className="fa-solid fa-utensils" style={{ color: C.greenDark, width: '16px' }} />
+              <div style={{display: 'flex', flexDirection: 'column', gap: '0.6rem',}}>
+                <a href="/gastronomy" style={{
+                  textDecoration: 'none',
+                  color: C.brown,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.6rem'
+                }}>
+                  <i className="fa-solid fa-utensils" style={{color: C.greenDark, width: '16px'}}/>
                   Гастрономија
                 </a>
-                <a href="/attractions" style={{ textDecoration: 'none', color: C.brown, display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                  <i className="fa-solid fa-person-hiking" style={{ color: C.greenMid, width: '16px' }} />
+                <a href="/attractions" style={{
+                  textDecoration: 'none',
+                  color: C.brown,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.6rem'
+                }}>
+                  <i className="fa-solid fa-person-hiking" style={{color: C.greenMid, width: '16px'}}/>
                   Атракции
                 </a>
-                <a href="/accommodations" style={{ textDecoration: 'none', color: C.brown, display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                  <i className="fa-solid fa-house" style={{ color: C.peach, width: '16px' }} />
+                <a href="/accommodations" style={{
+                  textDecoration: 'none',
+                  color: C.brown,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.6rem'
+                }}>
+                  <i className="fa-solid fa-house" style={{color: C.peach, width: '16px'}}/>
                   Сместување
+                </a>
+                <a href="/contact" style={{
+                  textDecoration: 'none',
+                  color: C.brown,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.6rem'
+                }}>
+                  <i className="fa-solid fa-paper-plane" style={{color: C.peach, width: '16px'}}/>
+                  Испрати порака
                 </a>
               </div>
             </div>
 
             {/* Contact */}
-            <div style={{ flex: '1 1 250px' }}>
-              <h4 style={{ marginBottom: '0.75rem' }}>Контакт</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <div style={{flex: '1 1 250px'}}>
+              <h4 style={{marginBottom: '0.75rem'}}>Контакт</h4>
+              <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
                 <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                   {/*<i className="fa-solid fa-envelope" style={{ color: C.peach, width: '16px' }} />*/}
                   <a
