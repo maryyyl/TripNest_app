@@ -80,3 +80,50 @@ export const contactAdminApi = {
     delete: (id) => api.delete(`/api/contact/${id}`),
     send:(data)=>api.post(`/api/contact`,data)
 }
+// ── AI Search ─────────────────────────────────────────────────────────────────
+export const aiSearchApi = {
+    search: async (query, accommodations) => {
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model: 'claude-sonnet-4-20250514',
+                max_tokens: 1000,
+                messages: [{
+                    role: 'user',
+                    content: `Ti si asistent za preporaka na smestuvanja vo Makedonija.
+ 
+Korisnikot bara: "${query}"
+ 
+Eve gi site dostapni smestuvanja (vo JSON format):
+${JSON.stringify(accommodations.map(a => ({
+                        id: a.id,
+                        naslov: a.naslov,
+                        lokacija: a.lokacija,
+                        cenaOdDen: a.cenaOdDen,
+                        kapacitet: a.kapacitet,
+                        opis: a.opis,
+                        tagovi: a.tagovi,
+                        wifi: a.wifi,
+                        bazen: a.bazen,
+                        spa: a.spa,
+                        balkon: a.balkon,
+                        parking: a.parking,
+                        kujna: a.kujna,
+                        klima: a.klima,
+                        ljubimci: a.ljubimci,
+                    })), null, 2)}
+ 
+Odgovori SAMO so JSON objekt vo ovoj format, bez nikakav tekst pred ili posle:
+{
+  "ids": [1, 2, 3],
+  "obrazlozenie": "Kratko objasnuvanje zosto gi izbrav ovie"
+}`
+                }]
+            })
+        })
+        const data = await response.json()
+        const text = data.content[0].text.trim()
+        return JSON.parse(text)
+    }
+}

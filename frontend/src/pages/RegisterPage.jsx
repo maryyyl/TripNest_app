@@ -21,7 +21,7 @@ export default function RegisterPage() {
       login(res.data.token, res.data.user)
       navigate('/')
     } catch {
-      setError('Грешка при регистрација. Обиди се повторно.')
+      setError(err.response?.data?.message || 'Корисник со овој email веќе постои')
     } finally {
       setLoading(false)
     }

@@ -24,8 +24,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public AuthResponseDTO register(String username, String email, String password) {
-        if (userRepository.findByUsername(username).isPresent()) {
-            throw new RuntimeException("Username already exists: " + username);
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new RuntimeException("Email already exists: " + email);
         }
 
         User user = new User();

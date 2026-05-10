@@ -4,6 +4,7 @@ import useAuthStore from '../store/authStore'
 import AddAccommodationModal from '../components/AddAccommodationModal'
 import ProposeAccommodationModal from '../components/ProposeAccommodationModal'
 import HomeReviews from '../components/HomeReviews.jsx'
+import AISearch from "../components/Aisearch.jsx";
 
 const C = {
   greenDark: '#4a7c59',
@@ -88,6 +89,7 @@ export default function Home() {
             </div>
           </div>
         </div>
+        <AISearch/>
 
         {/* Categories */}
         <div style={{ maxWidth: '72rem', margin: '0 auto', padding: '5rem 1.5rem' }}>

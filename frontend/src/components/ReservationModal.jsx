@@ -1,5 +1,7 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import {useNavigate} from 'react-router-dom'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 import {reservationApi} from '../api'
 import useAuthStore from '../store/authStore'
 
@@ -17,33 +19,43 @@ const C = {
 export default function ReservationModal({accommodation, onClose}) {
     const {isAuthenticated} = useAuthStore()
     const navigate = useNavigate()
-    const [form, setForm] = useState({datumOd: '', datumDo: '', brojLica: 1, napomena: ''})
+    const [form, setForm] = useState({datumOd: null, datumDo: null, brojLica: 1, napomena: ''})
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
     const [success, setSuccess] = useState(false)
+    const [bookedDates, setBookedDates] = useState([])
+
+    useEffect(() => {
+        if (!accommodation?.id) return
+        // Fetchај ги зафатените датуми
+        reservationApi.getBookedDates(accommodation.id)
+            .then(dates => {
+                // Очекуваме array од { datumOd: '2025-07-01', datumDo: '2025-07-05' }
+                const allDates = []
+                dates.forEach(({datumOd, datumDo}) => {
+                    const start = new Date(datumOd)
+                    const end = new Date(datumDo)
+                    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+                        allDates.push(new Date(d))
+                    }
+                })
+                setBookedDates(allDates)
+            })
+            .catch(() => {}) // ако нема endpoint, молчи
+    }, [accommodation?.id])
 
     if (!isAuthenticated) {
         return (
             <>
-                <div onClick={onClose} style={{
-                    position: 'fixed',
-                    inset: 0,
-                    backgroundColor: 'rgba(0,0,0,0.4)',
-                    zIndex: 100,
-                    backdropFilter: 'blur(2px)'
-                }}/>
+                <div onClick={onClose} style={{position:'fixed',inset:0,backgroundColor:'rgba(0,0,0,0.4)',zIndex:100,backdropFilter:'blur(2px)'}}/>
                 <div style={modalStyle}>
-                    <div style={{textAlign: 'center', padding: '2rem'}}>
-                        <p style={{fontSize: '3rem', marginBottom: '1rem'}}><i className="fa-solid fa-lock"></i></p>
-                        <h2 style={{color: C.greenDark, fontWeight: 'bold', marginBottom: '0.5rem'}}>Потребна е
-                            најава</h2>
-                        <p style={{color: C.textMuted, marginBottom: '1.5rem'}}>За да резервираш, мора да си
-                            најавен.</p>
-                        <div style={{display: 'flex', gap: '0.75rem', justifyContent: 'center'}}>
+                    <div style={{textAlign:'center',padding:'2rem'}}>
+                        <p style={{fontSize:'3rem',marginBottom:'1rem'}}><i className="fa-solid fa-lock"></i></p>
+                        <h2 style={{color:C.greenDark,fontWeight:'bold',marginBottom:'0.5rem'}}>Потребна е најава</h2>
+                        <p style={{color:C.textMuted,marginBottom:'1.5rem'}}>За да резервираш, мора да си најавен.</p>
+                        <div style={{display:'flex',gap:'0.75rem',justifyContent:'center'}}>
                             <button onClick={onClose} style={btnSecondary}>Откажи</button>
-                            <button onClick={() =>
-                                navigate('/login')}
-                                    style={btnPrimary}>Најави се</button>
+                            <button onClick={() => navigate('/login')} style={btnPrimary}>Најави се</button>
                         </div>
                     </div>
                 </div>
@@ -53,14 +65,22 @@ export default function ReservationModal({accommodation, onClose}) {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        if (!form.datumOd || !form.datumDo) {
+            setError('Изберете датуми'); return
+        }
         if (form.datumOd >= form.datumDo) {
-            setError('Датумот на одење мора да е пред датумот на враќање');
-            return
+            setError('Датумот на одење мора да е пред датумот на враќање'); return
         }
         setError('')
         setLoading(true)
         try {
-            await reservationApi.create({accommodationId: accommodation.id, ...form, brojLica: Number(form.brojLica)})
+            await reservationApi.create({
+                accommodationId: accommodation.id,
+                datumOd: form.datumOd.toISOString().split('T')[0],
+                datumDo: form.datumDo.toISOString().split('T')[0],
+                brojLica: Number(form.brojLica),
+                napomena: form.napomena,
+            })
             setSuccess(true)
         } catch {
             setError('Грешка при резервација. Обиди се повторно.')
@@ -70,131 +90,104 @@ export default function ReservationModal({accommodation, onClose}) {
     }
 
     const nights = form.datumOd && form.datumDo
-        ? Math.max(0, Math.ceil((new Date(form.datumDo) - new Date(form.datumOd)) / (1000 * 60 * 60 * 24)))
+        ? Math.max(0, Math.ceil((form.datumDo - form.datumOd) / (1000 * 60 * 60 * 24)))
         : 0
-
     const total = nights && accommodation.cenaOdDen ? nights * accommodation.cenaOdDen : null
+    const today = new Date(); today.setHours(0,0,0,0)
 
     return (
         <>
-            <div onClick={onClose} style={{
-                position: 'fixed',
-                inset: 0,
-                backgroundColor: 'rgba(0,0,0,0.4)',
-                zIndex: 100,
-                backdropFilter: 'blur(2px)'
-            }}/>
+            <div onClick={onClose} style={{position:'fixed',inset:0,backgroundColor:'rgba(0,0,0,0.4)',zIndex:100,backdropFilter:'blur(2px)'}}/>
             <div style={modalStyle}>
 
-                <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    marginBottom: '1.5rem'
-                }}>
-                    <h2 style={{fontSize: '1.25rem', fontWeight: 'bold', color: C.greenDark}}><i
-                        className="fa-solid fa-calendar-check"></i> Резервирај</h2>
-                    <button onClick={onClose} style={{
-                        background: 'none',
-                        border: 'none',
-                        fontSize: '1.5rem',
-                        cursor: 'pointer',
-                        color: C.textMuted
-                    }}>×
-                    </button>
+                <style>{`
+                    .rdp-custom .react-datepicker { font-family: inherit; border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.12); border-radius: 0.75rem; overflow: hidden; }
+                    .rdp-custom .react-datepicker__header { background: ${C.beige}; border-bottom: 1px solid ${C.beigeDark}; }
+                    .rdp-custom .react-datepicker__day--selected, .rdp-custom .react-datepicker__day--in-range { background: ${C.greenDark} !important; color: white !important; }
+                    .rdp-custom .react-datepicker__day--in-selecting-range { background: #a8c5b0 !important; color: white !important; }
+                    .rdp-custom .react-datepicker__day--excluded { background: #f5c6c6 !important; color: #c0392b !important; text-decoration: line-through; pointer-events: none; }
+                    .rdp-custom .react-datepicker__day:hover { background: ${C.beigeDark}; border-radius: 0.4rem; }
+                    .rdp-custom .react-datepicker__input-container input { width: 100%; padding: 0.625rem 0.875rem; border-radius: 0.625rem; border: 1px solid ${C.beigeDark}; font-size: 0.9rem; color: ${C.text}; background: ${C.beige}; outline: none; box-sizing: border-box; cursor: pointer; }
+                `}</style>
+
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'1.5rem'}}>
+                    <h2 style={{fontSize:'1.25rem',fontWeight:'bold',color:C.greenDark}}>
+                        <i className="fa-solid fa-calendar-check"></i> Резервирај
+                    </h2>
+                    <button onClick={onClose} style={{background:'none',border:'none',fontSize:'1.5rem',cursor:'pointer',color:C.textMuted}}>×</button>
                 </div>
 
-                {/* Accommodation info */}
-                <div style={{
-                    backgroundColor: C.beige,
-                    borderRadius: '0.75rem',
-                    padding: '0.875rem 1rem',
-                    marginBottom: '1.5rem'
-                }}>
-                    <p style={{fontWeight: '600', color: C.text}}>{accommodation.naslov}</p>
-                    {accommodation.lokacija && <p style={{fontSize: '0.85rem', color: C.textMuted}}>
-                        <i style={{color:'darkred',}} className="fa-solid fa-location-dot"></i> {accommodation.lokacija}</p>}
-                    {accommodation.cenaOdDen && <p style={{
-                        fontSize: '0.85rem',
-                        color: C.greenDark,
-                        fontWeight: '600',
-                        marginTop: '0.25rem'
-                    }}>од {accommodation.cenaOdDen.toLocaleString()} ден/ноќ</p>}
+                <div style={{backgroundColor:C.beige,borderRadius:'0.75rem',padding:'0.875rem 1rem',marginBottom:'1.5rem'}}>
+                    <p style={{fontWeight:'600',color:C.text}}>{accommodation.naslov}</p>
+                    {accommodation.lokacija && <p style={{fontSize:'0.85rem',color:C.textMuted}}><i style={{color:'darkred'}} className="fa-solid fa-location-dot"></i> {accommodation.lokacija}</p>}
+                    {accommodation.cenaOdDen && <p style={{fontSize:'0.85rem',color:C.greenDark,fontWeight:'600',marginTop:'0.25rem'}}>од {accommodation.cenaOdDen.toLocaleString()} ден/ноќ</p>}
                 </div>
 
                 {success ? (
-                    <div style={{textAlign: 'center', padding: '1.5rem 0'}}>
-                        <p style={{fontSize: '3rem', marginBottom: '0.75rem'}}>
-                            <i style={{color:'green',}} className="fa-solid fa-square-check"></i></p>
-                        <h3 style={{color: C.greenDark, fontWeight: 'bold', marginBottom: '0.5rem'}}>Резервацијата е
-                            испратена!</h3>
-                        <p style={{color: C.textMuted, fontSize: '0.9rem', marginBottom: '1.5rem'}}>Администраторот ќе
-                            ја прегледа и потврди наскоро.</p>
+                    <div style={{textAlign:'center',padding:'1.5rem 0'}}>
+                        <p style={{fontSize:'3rem',marginBottom:'0.75rem'}}><i style={{color:'green'}} className="fa-solid fa-square-check"></i></p>
+                        <h3 style={{color:C.greenDark,fontWeight:'bold',marginBottom:'0.5rem'}}>Резервацијата е испратена!</h3>
+                        <p style={{color:C.textMuted,fontSize:'0.9rem',marginBottom:'1.5rem'}}>Администраторот ќе ја прегледа и потврди наскоро.</p>
                         <button onClick={onClose} style={btnPrimary}>Затвори</button>
                     </div>
                 ) : (
-                    <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+                    <form onSubmit={handleSubmit} style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
 
-                        <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem'}}>
+                        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.75rem'}} className="rdp-custom">
                             <div>
                                 <label style={labelStyle}>Датум од *</label>
-                                <input type="date" value={form.datumOd} min={new Date().toISOString().split('T')[0]}
-                                       onChange={e => setForm({...form, datumOd: e.target.value})} required
-                                       style={inputStyle}/>
+                                <DatePicker
+                                    selected={form.datumOd}
+                                    onChange={date => setForm({...form, datumOd: date, datumDo: form.datumDo && date >= form.datumDo ? null : form.datumDo})}
+                                    excludeDates={bookedDates}
+                                    minDate={today}
+                                    dateFormat="dd.MM.yyyy"
+                                    placeholderText="Избери датум"
+                                    popperPlacement="bottom-start"
+                                    required
+                                />
                             </div>
                             <div>
                                 <label style={labelStyle}>Датум до *</label>
-                                <input type="date" value={form.datumDo}
-                                       min={form.datumOd || new Date().toISOString().split('T')[0]}
-                                       onChange={e => setForm({...form, datumDo: e.target.value})} required
-                                       style={inputStyle}/>
+                                <DatePicker
+                                    selected={form.datumDo}
+                                    onChange={date => setForm({...form, datumDo: date})}
+                                    excludeDates={bookedDates}
+                                    minDate={form.datumOd ? new Date(form.datumOd.getTime() + 86400000) : today}
+                                    dateFormat="dd.MM.yyyy"
+                                    placeholderText="Избери датум"
+                                    popperPlacement="bottom-start"
+                                    required
+                                />
                             </div>
                         </div>
 
                         <div>
                             <label style={labelStyle}>Број на лица *</label>
                             <input type="number" min="1" max="20" value={form.brojLica}
-                                   onChange={e => setForm({...form, brojLica: e.target.value})} required
-                                   style={inputStyle}/>
+                                   onChange={e => setForm({...form, brojLica: e.target.value})} required style={inputStyle}/>
                         </div>
 
                         <div>
                             <label style={labelStyle}>Напомена</label>
                             <textarea value={form.napomena} onChange={e => setForm({...form, napomena: e.target.value})}
-                                      rows={2} style={{...inputStyle, resize: 'vertical'}}
-                                      placeholder="Дополнителни барања..."/>
+                                      rows={2} style={{...inputStyle, resize:'vertical'}} placeholder="Дополнителни барања..."/>
                         </div>
 
-                        {/* Price summary */}
                         {nights > 0 && (
-                            <div style={{backgroundColor: C.beige, borderRadius: '0.75rem', padding: '0.875rem 1rem'}}>
-                                <div style={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    fontSize: '0.875rem',
-                                    color: C.textMuted
-                                }}>
+                            <div style={{backgroundColor:C.beige,borderRadius:'0.75rem',padding:'0.875rem 1rem'}}>
+                                <div style={{display:'flex',justifyContent:'space-between',fontSize:'0.875rem',color:C.textMuted}}>
                                     <span>{nights} ноќ/и × {accommodation.cenaOdDen?.toLocaleString()} ден</span>
-                                    {total && <span style={{
-                                        fontWeight: '700',
-                                        color: C.greenDark
-                                    }}>{total.toLocaleString()} ден</span>}
+                                    {total && <span style={{fontWeight:'700',color:C.greenDark}}>{total.toLocaleString()} ден</span>}
                                 </div>
                             </div>
                         )}
 
-                        {error && <p style={{
-                            color: '#c0392b',
-                            fontSize: '0.875rem',
-                            backgroundColor: '#fdecea',
-                            padding: '0.5rem 0.875rem',
-                            borderRadius: '0.5rem'
-                        }}>{error}</p>}
+                        {error && <p style={{color:'#c0392b',fontSize:'0.875rem',backgroundColor:'#fdecea',padding:'0.5rem 0.875rem',borderRadius:'0.5rem'}}>{error}</p>}
 
-                        <div style={{display: 'flex', gap: '0.75rem', marginTop: '0.25rem'}}>
+                        <div style={{display:'flex',gap:'0.75rem',marginTop:'0.25rem'}}>
                             <button type="button" onClick={onClose} style={btnSecondary}>Откажи</button>
-                            <button type="submit" disabled={loading}
-                                    style={{...btnPrimary, opacity: loading ? 0.7 : 1}}>
+                            <button type="submit" disabled={loading} style={{...btnPrimary,opacity:loading ? 0.7 : 1}}>
                                 {loading ? 'Се испраќа...' : 'Испрати барање'}
                             </button>
                         </div>
@@ -206,37 +199,37 @@ export default function ReservationModal({accommodation, onClose}) {
 }
 
 const modalStyle = {
-    position: 'fixed', top: '50%', left: '50%',
-    transform: 'translate(-50%, -50%)',
-    zIndex: 101, width: '100%', maxWidth: '32rem',
-    maxHeight: '90vh', overflowY: 'auto',
-    backgroundColor: '#ffffff',
-    borderRadius: '1.25rem',
-    boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
-    padding: '2rem',
+    position:'fixed', top:'50%', left:'50%',
+    transform:'translate(-50%, -50%)',
+    zIndex:101, width:'100%', maxWidth:'32rem',
+    maxHeight:'90vh', overflowY:'auto',
+    backgroundColor:'#ffffff',
+    borderRadius:'1.25rem',
+    boxShadow:'0 20px 60px rgba(0,0,0,0.2)',
+    padding:'2rem',
 }
 
 const inputStyle = {
-    width: '100%', padding: '0.625rem 0.875rem',
-    borderRadius: '0.625rem', border: `1px solid ${C.beigeDark}`,
-    fontSize: '0.9rem', color: C.text, backgroundColor: C.beige,
-    outline: 'none', boxSizing: 'border-box',
+    width:'100%', padding:'0.625rem 0.875rem',
+    borderRadius:'0.625rem', border:`1px solid ${C.beigeDark}`,
+    fontSize:'0.9rem', color:C.text, backgroundColor:C.beige,
+    outline:'none', boxSizing:'border-box',
 }
 
 const labelStyle = {
-    display: 'block', fontSize: '0.8rem', fontWeight: '600',
-    color: C.textMuted, marginBottom: '0.3rem',
-    textTransform: 'uppercase', letterSpacing: '0.04em',
+    display:'block', fontSize:'0.8rem', fontWeight:'600',
+    color:C.textMuted, marginBottom:'0.3rem',
+    textTransform:'uppercase', letterSpacing:'0.04em',
 }
 
 const btnPrimary = {
-    flex: 1, padding: '0.75rem', backgroundColor: C.greenDark,
-    color: '#fff', border: 'none', borderRadius: '0.75rem',
-    fontWeight: '600', cursor: 'pointer',
+    flex:1, padding:'0.75rem', backgroundColor:C.greenDark,
+    color:'#fff', border:'none', borderRadius:'0.75rem',
+    fontWeight:'600', cursor:'pointer',
 }
 
 const btnSecondary = {
-    flex: 1, padding: '0.75rem', backgroundColor: C.beigeDark,
-    color: C.text, border: 'none', borderRadius: '0.75rem',
-    fontWeight: '600', cursor: 'pointer',
+    flex:1, padding:'0.75rem', backgroundColor:C.beigeDark,
+    color:C.text, border:'none', borderRadius:'0.75rem',
+    fontWeight:'600', cursor:'pointer',
 }
