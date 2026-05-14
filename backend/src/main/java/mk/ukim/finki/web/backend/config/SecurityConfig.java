@@ -64,6 +64,7 @@ public class SecurityConfig {
                         .requestMatchers("GET", "/api/reservations/booked-dates/**").permitAll()
                         .requestMatchers("GET", "/api/reviews/latest").permitAll()
                         .requestMatchers("/api/contact").permitAll()
+                        .requestMatchers("/api/ai-search").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

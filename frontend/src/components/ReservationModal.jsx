@@ -19,29 +19,25 @@ const C = {
 export default function ReservationModal({accommodation, onClose}) {
     const {isAuthenticated} = useAuthStore()
     const navigate = useNavigate()
-    const [form, setForm] = useState({datumOd: null, datumDo: null, brojLica: 1, napomena: ''})
+    const [form, setForm] = useState({datumOd: null, datumDo: null, vozrasni: 1, deca: 0, napomena: ''})
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
     const [success, setSuccess] = useState(false)
     const [bookedDates, setBookedDates] = useState([])
+    const [afterLogin, setAfterLogin] = useState(null)
 
     useEffect(() => {
         if (!accommodation?.id) return
-        // Fetchај ги зафатените датуми
         reservationApi.getBookedDates(accommodation.id)
-            .then(dates => {
-                // Очекуваме array од { datumOd: '2025-07-01', datumDo: '2025-07-05' }
-                const allDates = []
-                dates.forEach(({datumOd, datumDo}) => {
-                    const start = new Date(datumOd)
-                    const end = new Date(datumDo)
-                    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-                        allDates.push(new Date(d))
-                    }
+            .then(res => {
+                // API враќа низа на стринг датуми: ["2025-07-01", "2025-07-02", ...]
+                const dates = (res.data || res).map(d => {
+                    const [y, m, day] = d.split('-')
+                    return new Date(Number(y), Number(m) - 1, Number(day))
                 })
-                setBookedDates(allDates)
+                setBookedDates(dates)
             })
-            .catch(() => {}) // ако нема endpoint, молчи
+            .catch(() => {})
     }, [accommodation?.id])
 
     if (!isAuthenticated) {
@@ -53,9 +49,22 @@ export default function ReservationModal({accommodation, onClose}) {
                         <p style={{fontSize:'3rem',marginBottom:'1rem'}}><i className="fa-solid fa-lock"></i></p>
                         <h2 style={{color:C.greenDark,fontWeight:'bold',marginBottom:'0.5rem'}}>Потребна е најава</h2>
                         <p style={{color:C.textMuted,marginBottom:'1.5rem'}}>За да резервираш, мора да си најавен.</p>
-                        <div style={{display:'flex',gap:'0.75rem',justifyContent:'center'}}>
+                        <div style={{display: 'flex', gap: '0.75rem', justifyContent: 'center'}}>
                             <button onClick={onClose} style={btnSecondary}>Откажи</button>
-                            <button onClick={() => navigate('/login')} style={btnPrimary}>Најави се</button>
+                            <button
+                                onClick={() => {
+                                    navigate('/login', {
+                                        state: {
+                                            action: 'OPEN_RESERVATION_MODAL',
+                                            accommodationId: accommodation.id,
+                                        },
+                                    })
+                                }}
+                                style={btnPrimary}
+                            >
+                                Најави се
+                            </button>
+                            {/*<button onClick={() => navigate('/login')} style={btnPrimary}>Најави се</button>*/}
                         </div>
                     </div>
                 </div>
@@ -65,12 +74,8 @@ export default function ReservationModal({accommodation, onClose}) {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if (!form.datumOd || !form.datumDo) {
-            setError('Изберете датуми'); return
-        }
-        if (form.datumOd >= form.datumDo) {
-            setError('Датумот на одење мора да е пред датумот на враќање'); return
-        }
+        if (!form.datumOd || !form.datumDo) { setError('Изберете датуми'); return }
+        if (form.datumOd >= form.datumDo) { setError('Датумот на одење мора да е пред датумот на враќање'); return }
         setError('')
         setLoading(true)
         try {
@@ -78,7 +83,7 @@ export default function ReservationModal({accommodation, onClose}) {
                 accommodationId: accommodation.id,
                 datumOd: form.datumOd.toISOString().split('T')[0],
                 datumDo: form.datumDo.toISOString().split('T')[0],
-                brojLica: Number(form.brojLica),
+                brojLica: Number(form.vozrasni) + Number(form.deca),
                 napomena: form.napomena,
             })
             setSuccess(true)
@@ -133,6 +138,7 @@ export default function ReservationModal({accommodation, onClose}) {
                 ) : (
                     <form onSubmit={handleSubmit} style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
 
+                        {/* Датуми */}
                         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.75rem'}} className="rdp-custom">
                             <div>
                                 <label style={labelStyle}>Датум од *</label>
@@ -162,22 +168,56 @@ export default function ReservationModal({accommodation, onClose}) {
                             </div>
                         </div>
 
-                        <div>
-                            <label style={labelStyle}>Број на лица *</label>
-                            <input type="number" min="1" max="20" value={form.brojLica}
-                                   onChange={e => setForm({...form, brojLica: e.target.value})} required style={inputStyle}/>
+                        {/* Возрасни + Деца */}
+                        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.75rem'}}>
+                            <div>
+                                <label style={labelStyle}>
+                                    <i className="fa-solid fa-user" style={{marginRight:'0.3rem'}}/> Возрасни *
+                                </label>
+                                <input
+                                    type="number" min="1" max="20"
+                                    value={form.vozrasni}
+                                    onChange={e => setForm({...form, vozrasni: e.target.value})}
+                                    required style={inputStyle}
+                                />
+                            </div>
+                            <div>
+                                <label style={labelStyle}>
+                                    <i className="fa-solid fa-child" style={{marginRight:'0.3rem'}}/> Деца
+                                </label>
+                                <input
+                                    type="number" min="0" max="20"
+                                    value={form.deca}
+                                    onChange={e => setForm({...form, deca: e.target.value})}
+                                    style={inputStyle}
+                                />
+                            </div>
                         </div>
 
+                        {/* Вкупно лица */}
+                        {(Number(form.vozrasni) + Number(form.deca)) > 0 && (
+                            <p style={{fontSize:'0.8rem',color:C.textMuted,margin:'-0.25rem 0'}}>
+                                <i className="fa-solid fa-user-group" style={{marginRight:'0.3rem'}}/>
+                                Вкупно: {Number(form.vozrasni) + Number(form.deca)} лица
+                                ({form.vozrasni} возрасни + {form.deca} деца)
+                            </p>
+                        )}
+
+                        {/* Напомена */}
                         <div>
                             <label style={labelStyle}>Напомена</label>
                             <textarea value={form.napomena} onChange={e => setForm({...form, napomena: e.target.value})}
                                       rows={2} style={{...inputStyle, resize:'vertical'}} placeholder="Дополнителни барања..."/>
                         </div>
 
+                        {/* Price summary */}
                         {nights > 0 && (
                             <div style={{backgroundColor:C.beige,borderRadius:'0.75rem',padding:'0.875rem 1rem'}}>
                                 <div style={{display:'flex',justifyContent:'space-between',fontSize:'0.875rem',color:C.textMuted}}>
-                                    <span>{nights} ноќ/и × {accommodation.cenaOdDen?.toLocaleString()} ден</span>
+                                    <span>
+                                        {nights} ноќ/и × {accommodation.cenaOdDen?.toLocaleString()} ден
+                                        · {Number(form.vozrasni) + Number(form.deca)} лица
+                                    </span>
                                     {total && <span style={{fontWeight:'700',color:C.greenDark}}>{total.toLocaleString()} ден</span>}
                                 </div>
                             </div>

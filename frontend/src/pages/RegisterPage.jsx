@@ -18,8 +18,8 @@ export default function RegisterPage() {
     setLoading(true)
     try {
       const res = await authApi.register({ username: form.username, email: form.email, password: form.password })
-      login(res.data.token, res.data.user)
-      navigate('/')
+      // login(res.data.token, res.data.user)
+      navigate('/login')
     } catch {
       setError(err.response?.data?.message || 'Корисник со овој email веќе постои')
     } finally {

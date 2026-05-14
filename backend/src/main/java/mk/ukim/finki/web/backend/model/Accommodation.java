@@ -24,17 +24,17 @@ public class Accommodation extends BaseEntity {
 
     private Double cenaOdDen;
 
-    private String status;
+    private String status; //superDomakin,superBrzDomakin , novo
 
     @Column(length = 1000)
     private String link;
 
-    private String slika;
+    private String slika; //upload, a ne link, pri dodavanje od korisnik
 
     @Column(length = 2000)
     private String opis;
 
-    // Нови полиња
+
     private Integer kapacitet;
 
     private Boolean wifi;

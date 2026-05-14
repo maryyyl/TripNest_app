@@ -107,7 +107,7 @@ export default function Navbar() {
                   {user?.username}
               </span>
                             <button
-                                onClick={() => { logout(); navigate('/') }}
+                                onClick={() => { logout();}}
                                 style={{ padding: '0.5rem 1rem', fontSize: '0.875rem', color: C.textMuted, background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
                             >
                                 <i className="fa-solid fa-right-from-bracket" style={{ fontSize: '0.85rem' }} />

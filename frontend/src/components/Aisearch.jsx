@@ -16,10 +16,10 @@ const C = {
 }
 
 const EXAMPLES = [
-    'Сместување за 5 лица со базен во Охрид',
+    'Сместување за 5 лица со базен во Скопје',
     'Романтична вила со СПА до 5000 ден',
     'Сместување со миленичиња во природа',
-    'Буџет апартман во Скопје со паркинг',
+    'Буџет апартман во Охрид со паркинг',
 ]
 
 function AccommodationCard({ item }) {
@@ -70,9 +70,11 @@ export default function AISearch() {
         setResults(null)
 
         try {
-            const allRes = await accommodationApi.getAll()
+            const [allRes, aiResult] = await Promise.all([
+                accommodationApi.getAll(),
+                aiSearchApi.search(q),
+            ])
             const all = allRes.data
-            const aiResult = await aiSearchApi.search(q, all)
             const matched = aiResult.ids
                 .map(id => all.find(a => a.id === id))
                 .filter(Boolean)
@@ -100,7 +102,7 @@ export default function AISearch() {
                         Опиши го своето совршено сместување
                     </h2>
                     <p style={{ color: C.textMuted, fontSize: '0.95rem' }}>
-                        Пишувај на природен јазик — AI ќе ти најде најсоодветните опции
+                        Пишувај на природен јазик — нашиот AI асистент ќе ги најде најсоодветните опции за тебе!
                     </p>
                 </div>
 
